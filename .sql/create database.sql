@@ -1,4 +1,4 @@
-SET default_storage_engine=InnoDb;
+SET default_storage_engine = InnoDb;
 --
 
 set foreign_key_checks = 0;
@@ -22,16 +22,16 @@ create database ppe
     collate utf8mb4_0900_ai_ci;
 
 -- Applique un mode strict, propre et pédagogique
-    SET GLOBAL sql_mode = 'STRICT_ALL_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,NO_ENGINE_SUBSTITUTION,ANSI_QUOTES,ONLY_FULL_GROUP_BY';
+SET GLOBAL sql_mode =
+        'STRICT_ALL_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,NO_ENGINE_SUBSTITUTION,ANSI_QUOTES,ONLY_FULL_GROUP_BY';
 
 -- Affiche les modes SQL actuellement en vigueur
-SELECT
-    @@GLOBAL.sql_mode AS 'Mode SQL Global (par défaut)',
-    @@SESSION.sql_mode AS 'Mode SQL de cette session';
+SELECT @@GLOBAL.sql_mode  AS 'Mode SQL Global (par défaut)',
+       @@SESSION.sql_mode AS 'Mode SQL de cette session';
 
 -- ordre de lancement des scripts
 -- 1. répertoire page : create, insert
 -- 2. répertoire membre : create, declencheur insert
--- 3. répertoire epreuve : create, declencheur, insert
+-- 3. répertoire epreuve : create, insert declencheur
 
 
