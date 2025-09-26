@@ -1,3 +1,9 @@
+<?php
+Structure::verifier();
+// pour l'affichage dans le pied de page
+$mention = Page::getMentions();
+$politique = Page::getPolitique();
+?>
 <!DOCTYPE HTML>
 <html lang="fr">
 <head>

@@ -2,7 +2,7 @@
 require $_SERVER['DOCUMENT_ROOT'] . '/include/autoload.php'; // initialise les classes + session
 
 // chargement du composant Mpdf
-require RACINE . '/vendor/autoload.php';
+require  . '/vendor/autoload.php';
 
 use Mpdf\HTMLParserMode;
 use Mpdf\Mpdf;
