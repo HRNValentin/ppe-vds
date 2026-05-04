@@ -38,18 +38,32 @@ initialiserToutesLesCartes();
 // les informations
 
 // affichage de la prochaine épreuve
-dateEpreuve.innerText =  formatDateLong(prochaineEdition.date);
+dateEpreuve.innerText = formatDateLong(prochaineEdition.date);
 descriptionEpreuve.innerHTML = prochaineEdition.description;
 
 
 // afficher les derniers classements pdf
 for (const element of lesClassements) {
     let a = document.createElement('a');
-    a.classList.add('lien'),
-        a.href = "/afficherclassement.php?id=" + element.id;
+    a.classList.add('lien');
+    a.href = "/afficherclassement.php?id=" + element.id;
     a.innerText = element.dateFr + ' ' + element.titre;
     detailClassement.appendChild(a);
 }
+
+
+//-------------------------------------------------------------------------------------------
+
+
+// afficher les inscriptions pdf
+for (const element of prochaineEdition.lesInscriptions) {
+    let a = document.createElement('a');
+    a.classList.add('lien');
+    a.href = "/afficherinscription.php?id=" + element.id;
+    a.innerText = element.dateFr + ' ' + element.titre;
+    detailClassement.appendChild(a);
+}
+
 
 
 

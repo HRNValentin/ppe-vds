@@ -6,14 +6,13 @@
 
 import {appelAjax} from "/composant/fonction/ajax.js";
 import {afficherToast,} from "/composant/fonction/afficher.js";
-import {configurerFormulaire, fichierValide } from "/composant/fonction/formulaire.js";
-import {initialiserMenuHorizontal} from "/composant/menuhorizontal/menu.js";
+import {configurerFormulaire, fichierValide, verifierImage, effacerLesErreurs} from "/composant/fonction/formulaire.js";
 
 // -----------------------------------------------------------------------------------
 // Déclaration des variables globales
 // -----------------------------------------------------------------------------------
 
-/*global lesParametres, photo, lesOptions */
+/*global lesParametres, photo */
 
 const msg = document.getElementById('msg');
 const cible = document.getElementById('cible');
@@ -25,55 +24,54 @@ fichier.accept = lesParametres.accept;
 // procédures évènementielles
 // -----------------------------------------------------------------------------------
 
-// Déclencher le clic sur le champ de type file lors d'un clic dans la zone cible
+/// Déclencher le clic sur le champ de type file lors d'un clic dans la zone cible
 cible.onclick = () => fichier.click();
 
-// sur la sélection d'un fichier
-fichier.onchange = () => {
-    if (fichier.files.length > 0) {
-        let file = fichier.files[0];
-        if (controlerFichier(file)) {
-            ajouter(file);
-        }
-    }
-};
-
-// définition des gestionnaires d'événements pour déposer un fichier dans la cible
+// // ajout du glisser déposer dans la zone cible
 cible.ondragover = (e) => e.preventDefault();
 cible.ondrop = (e) => {
     e.preventDefault();
-    let file = e.dataTransfer.files[0];
-    if (controlerFichier(file)) {
-        ajouter(file);
+    controlerFichier(e.dataTransfer.files[0]);
+};
+
+// traitement du champ file associé aux modifications de photos
+fichier.onchange = function () {
+    if (this.files.length > 0) {
+        controlerFichier(this.files[0]);
     }
 };
 
 // suppression de la photo
-btnSupprimer.onclick = () => {
-    supprimer();
-};
+btnSupprimer.onclick = supprimer;
 
 // -----------------------------------------------------------------------------------
 // Fonctions de traitement
 // -----------------------------------------------------------------------------------
 
 /**
- * Traite le fichier sélectionné ou déposé
- * @param {File} file - Le fichier à contrôler
+ * Contrôle le fichier sélectionné au niveau de son extension et de sa taille
+ * Vérifie que le fichier est bien une image et que ses dimensions sont correctes si le redimensionnement n'est pas demandé
+ * lancer la demande de remplacement de l'image
+ * @param file {object} fichier à ajouter
  */
 function controlerFichier(file) {
+    // Efface les erreurs précédentes
+    effacerLesErreurs();
     // Vérification de taille et d'extension
-    // on ne vérifie les dimensions car la photo sera automatiquement redimensionnée
-    if (fichierValide(file, lesParametres)) {
-        ajouter(file);
+    if (!fichierValide(file, lesParametres)) {
+        return;
     }
+    // Vérifications spécifiques pour un fichier image
+    // La fonction de rappel reçoit implicitement en paramètre l'objet file et l'objet Image créé
+    verifierImage(file, lesParametres, ajouter);
 }
 
 /**
  * Ajoute la photo sélectionnée ou déposée
  * @param file
+ * @param img
  */
-function ajouter(file) {
+function ajouter(file, img) {
     // Vider la zone de message utilisateur
     msg.innerHTML = "";
 
@@ -84,11 +82,9 @@ function ajouter(file) {
     appelAjax({
         url: 'ajax/ajouter.php',
         data: formData,
-        success: (data) => {
+        success: () => {
             // il faut afficher le bouton pour supprimer la photo
             btnSupprimer.style.display = 'block';
-            const img = document.createElement('img');
-            img.src = lesParametres.repertoire + '/' + data.success;
             cible.innerHTML = '';
             cible.appendChild(img);
             afficherToast('La photo a été modifiée');
@@ -106,7 +102,7 @@ function supprimer() {
     appelAjax({
         url: 'ajax/supprimer.php',
         success: () => {
-            // il faut afficher le bouton pour supprimer la photo
+            // il faut masquer  le bouton pour supprimer la photo
             btnSupprimer.style.display = 'none';
             // effacer la photo
             cible.innerHTML = '';
@@ -118,7 +114,6 @@ function supprimer() {
 // Programme principal
 // -----------------------------------------------------------------------------------
 
-initialiserMenuHorizontal(lesOptions);
 
 configurerFormulaire();
 

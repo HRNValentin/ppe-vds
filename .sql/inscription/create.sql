@@ -8,10 +8,10 @@ drop table if exists inscription;
 create table inscription
 (
     id            int auto_increment primary key,
-    nom           varchar(50)   not null,
+    nom           varchar(100)   not null,
     dateEpreuve   date          not null,
     dateOuverture date          not null,
     dateCloture   date          not null,
-    lienInscription varchar(100) not null,
-    lienInscrit   varchar(100)  not null default '0'
+    lienInscription varchar(250) not null,
+    lienInscrit   varchar(250)  not null default '0'
 );

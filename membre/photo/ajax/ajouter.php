@@ -16,7 +16,7 @@ $lesParametres = Membre::getConfig();
 $repertoire = $lesParametres['repertoire'];
 
 // instanciation et paramétrage d'un objet InputFile
-$file = new InputFileImg($lesParametres);
+$file = new InputFileImg($_FILES['fichier'], $lesParametres);
 
 // contrôle de l'objet $file
 if (!$file->checkValidity()) {
@@ -38,4 +38,4 @@ $file->copy();
 Membre::modifierPhoto($id, $file->Value);
 
 // réponse du serveur : nom du fichier stocké
-echo json_encode(['success' => $file->Value], JSON_UNESCAPED_UNICODE);
+echo json_encode(['success' => 'Photo mémorisée'], JSON_UNESCAPED_UNICODE);

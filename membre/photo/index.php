@@ -3,7 +3,6 @@
 require $_SERVER['DOCUMENT_ROOT'] . '/include/autoload.php';
 
 // chargement des données
-$lesOptions = file_get_contents(RACINE . '/membre/.config/menuhorizontal.json');
 
 $photo = json_encode(Membre::getPhoto($_SESSION['membre']['id']));
 $lesParametres = json_encode(Membre::getConfig());
